@@ -2,7 +2,7 @@ const express = require("express");
 const formidable = require("express-formidable");
 const mongoose = require("mongoose");
 require("dotenv").config(); //penser à installer npm dotenv
-const cors = require("cos");
+const cors = require("cors");
 
 const app = express();
 app.use(formidable());
