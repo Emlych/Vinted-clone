@@ -110,11 +110,15 @@ router.get("/offers", async (req, res) => {
   req.query.page ? (page = req.query.page) : (page = 1);
 
   //Tri des offres
+  // const offers = await Offer.find(filteredObjet)
+  //   .sort(sortObject)
+  //   .skip((page - 1) * limit)
+  //   .limit(limit)
+  //   .select("product_name product_price");
   const offers = await Offer.find(filteredObjet)
     .sort(sortObject)
     .skip((page - 1) * limit)
-    .limit(limit)
-    .select("product_name product_price");
+    .limit(limit);
 
   //Nombre de documents dans la base
   const count = await Offer.countDocuments(filteredObjet);
