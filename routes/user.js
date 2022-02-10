@@ -50,10 +50,12 @@ router.post("/user/signup", async (req, res) => {
 
       //upload photo on cloudinary
       const pictureToUpload = req.files.picture.path;
-      const result = await cloudinary.uploader.upload(pictureToUpload, {
-        public_id: `vinted/users/${newUser._id}`,
-      });
-      newUser.account["avatar"] = result;
+      if (pictureToUpload) {
+        const result = await cloudinary.uploader.upload(pictureToUpload, {
+          public_id: `vinted/users/${newUser._id}`,
+        });
+        newUser.account["avatar"] = result;
+      }
 
       await newUser.save();
 
