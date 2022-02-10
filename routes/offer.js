@@ -102,22 +102,18 @@ router.get("/offers", async (req, res) => {
     : (sortObject.product_price = "asc");
 
   //valeur par défaut de limit
-  let limit = 3;
-  req.query.limit ? (limit = req.query.limit) : (limit = 3);
+  let limit = 30;
+  req.query.limit ? (limit = req.query.limit) : (limit = 30);
 
   //valeur par défaut de page
   let page = 1;
   req.query.page ? (page = req.query.page) : (page = 3);
 
   //Tri des offres
-  // const offers = await Offer.find(filteredObjet)
-  //   .sort(sortObject)
-  //   .skip((page - 1) * limit)
-  //   .limit(limit)
-  //   .select("product_name product_price");
-
   const offers = await Offer.find(filteredObjet)
     .sort(sortObject)
+    .skip((page - 1) * limit)
+    .limit(limit)
     .select("product_name product_price");
 
   //Nombre de documents dans la base
