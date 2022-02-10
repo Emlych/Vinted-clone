@@ -107,7 +107,7 @@ router.get("/offers", async (req, res) => {
 
   //valeur par défaut de page
   let page = 1;
-  req.query.page ? (page = req.query.page) : (page = 3);
+  req.query.page ? (page = req.query.page) : (page = 1);
 
   //Tri des offres
   const offers = await Offer.find(filteredObjet)
