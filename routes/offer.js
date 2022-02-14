@@ -36,6 +36,7 @@ const isAuthenticated = async (req, res, next) => {
 router.post("/offer/publish", isAuthenticated, async (req, res) => {
   console.log("route: /offer/publish");
   const targetUser = await User.findById(req.fields.userId);
+  console.log("targetUser ===>", targetUser);
   try {
     //create new offer
     const newOffer = new Offer({
@@ -59,9 +60,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
       public_id: `vinted/offers/${newOffer._id}`,
     });
 
-    if (pictureToUpload) {
-      newOffer["product_image"] = result;
-    }
+    if (pictureToUpload) newOffer["product_image"] = result;
 
     await newOffer.save();
     res.json(newOffer);
@@ -102,27 +101,24 @@ router.get("/offers", async (req, res) => {
     : (sortObject.product_price = "asc");
 
   //valeur par défaut de limit
-  let limit = 30;
-  req.query.limit ? (limit = req.query.limit) : (limit = 30);
+  let limit = 20;
+  req.query.limit ? (limit = req.query.limit) : (limit = 20);
 
   //valeur par défaut de page
   let page = 1;
   req.query.page ? (page = req.query.page) : (page = 1);
 
   //Tri des offres
-  // const offers = await Offer.find(filteredObjet)
-  //   .sort(sortObject)
-  //   .skip((page - 1) * limit)
-  //   .limit(limit)
-  //   .select("product_name product_price");
   const offers = await Offer.find(filteredObjet)
+    .populate({ path: "owner", select: "account" })
     .sort(sortObject)
     .skip((page - 1) * limit)
     .limit(limit);
+  //.select("product_name product_price");
+  console.log("offers ===>", offers[0].owner.account);
 
   //Nombre de documents dans la base
   const count = await Offer.countDocuments(filteredObjet);
-  console.log(offers);
   //Affichage du résultat
   res.json({ count: count, offers: offers });
 });
