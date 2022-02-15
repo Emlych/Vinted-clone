@@ -36,7 +36,8 @@ const isAuthenticated = async (req, res, next) => {
 //Publish offer (create offer)
 router.post("/offer/publish", isAuthenticated, async (req, res) => {
   console.log("route: /offer/publish");
-  const targetUser = await User.findById(req.fields.userId);
+  const targetUser = await User.findOne(req.headers.authorization);
+  // const targetUser = await User.findById(req.fields.userId);
   try {
     //create new offer
     const newOffer = new Offer({
