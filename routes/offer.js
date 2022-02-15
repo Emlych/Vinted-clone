@@ -54,7 +54,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
       ],
       //product_image: result,
       // owner: targetUser,
-      owner: req.user,
+      owner: req.isTokenValid,
     });
 
     //upload photo on cloudinary
