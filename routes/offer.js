@@ -115,7 +115,7 @@ router.get("/offers", async (req, res) => {
     .skip((page - 1) * limit)
     .limit(limit);
   //.select("product_name product_price");
-  console.log("offers ===>", offers[0].owner.account);
+  // console.log("offers ===>", offers[0].owner.account);
 
   //Nombre de documents dans la base
   const count = await Offer.countDocuments(filteredObjet);
