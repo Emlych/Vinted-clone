@@ -36,8 +36,8 @@ const isAuthenticated = async (req, res, next) => {
 //Publish offer (create offer)
 router.post("/offer/publish", isAuthenticated, async (req, res) => {
   console.log("route: /offer/publish");
-  // const tokenUser = req.headers.authorization;
-  // const targetUser = await User.findOne(tokenUser.replace("Bearer ", ""));
+  const tokenUser = req.headers.authorization.replace("Bearer ", "");
+  const targetUser = await User.findOne({ token: tokenUser });
   // const targetUser = await User.findById(req.fields.userId);
   try {
     //create new offer
@@ -54,7 +54,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
       ],
       //product_image: result,
       // owner: targetUser,
-      owner: req.isTokenValid,
+      owner: targetUser,
     });
 
     //upload photo on cloudinary
