@@ -2,6 +2,7 @@ const express = require("express");
 const formidableMiddleware = require("express-formidable");
 const router = express.Router();
 const cloudinary = require("cloudinary").v2;
+const stripe = require("stripe")(process.env.STRIPEKEY);
 
 //Import models
 const Offer = require("../models/Offer");
@@ -36,7 +37,6 @@ const isAuthenticated = async (req, res, next) => {
 router.post("/offer/publish", isAuthenticated, async (req, res) => {
   console.log("route: /offer/publish");
   const targetUser = await User.findById(req.fields.userId);
-  console.log("targetUser ===>", targetUser);
   try {
     //create new offer
     const newOffer = new Offer({
@@ -183,6 +183,21 @@ router.get("/offer/:id", async (req, res) => {
   } catch (error) {
     res.status(400).json(error.message);
   }
+});
+
+//Pay
+router.post("/pay", async (req, res) => {
+  console.log("route: /pay");
+  console.log("request ==>", req.fields);
+  const stripeToken = req.fields.stripeToken;
+  const response = await stripe.charges.create({
+    amount: 2000,
+    currency: "eur",
+    description: "la description de l'objet acheté",
+    source: stripeToken,
+  });
+  console.log(response.status);
+  res.json(response);
 });
 
 module.exports = router;
