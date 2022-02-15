@@ -189,15 +189,18 @@ router.get("/offer/:id", async (req, res) => {
 router.post("/pay", async (req, res) => {
   console.log("route: /pay");
   console.log("request ==>", req.fields);
-  const stripeToken = req.fields.stripeToken;
-  const response = await stripe.charges.create({
-    amount: 2000,
-    currency: "eur",
-    description: "la description de l'objet acheté",
-    source: stripeToken,
-  });
-  console.log(response.status);
-  res.json(response);
+  try {
+    const response = await stripe.charges.create({
+      source: req.fields.stripeToken,
+      amount: req.fields.amount * 100,
+      currency: "eur",
+      title: req.files.title,
+    });
+    console.log("status of response ==>", response.status);
+    res.json(response);
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
 });
 
 module.exports = router;
